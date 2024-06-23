@@ -13,8 +13,15 @@ class BerlinpolizeiSpider(scrapy.Spider):
         cases = response.css('#layout-grid__area--maincontent > section.modul-autoteaser > ul > li')
 
         for case in cases:
-            dateandtime = case.css('div.cell.nowrap.date::text').get()
-            hyperlink = case.css('div.cell.text > a').attrib['href']
-            title = case.css('div.cell.text > a::text').get()
+            metadata = dict()
+            metadata['date'] = case.css('div.cell.nowrap.date::text').get().replace(' Uhr', '')
+            metadata['url'] = case.css('div.cell.text > a::attr(href)').get()
+            metadata['title'] = case.css('div.cell.text > a::text').get()
+
+            yield metadata
         
-        return
+        next_page = response.css('#layout-grid__area--maincontent > section.modul-autoteaser > nav > ul > li.pager-item-next > a::attr(href)').get()
+        
+        if next_page is not None:
+           next_page_url = 'https://www.berlin.de' + next_page
+           yield response.follow(next_page_url, callback=self.parse)
