@@ -12,4 +12,9 @@ class BerlinpolizeiSpider(scrapy.Spider):
         
         cases = response.css('#layout-grid__area--maincontent > section.modul-autoteaser > ul > li')
 
-        pass
+        for case in cases:
+            dateandtime = case.css('div.cell.nowrap.date::text').get()
+            hyperlink = case.css('div.cell.text > a').attrib['href']
+            title = case.css('div.cell.text > a::text').get()
+        
+        return
