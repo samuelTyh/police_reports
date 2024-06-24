@@ -6,7 +6,10 @@
 import scrapy
 
 
-class PoliceReportsCrawlerItem(scrapy.Item):
+class PoliceReportCase(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    pass
+
+    created_at = scrapy.Field()
+    url = scrapy.Field()
+    title = scrapy.Field()

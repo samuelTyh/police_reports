@@ -1,24 +1,25 @@
+import datetime
 import scrapy
+from police_reports_crawler.items import PoliceReportCase
+from police_reports_crawler.itemloaders import BerlinPoliceReportLoader
 
 
 class BerlinpolizeiSpider(scrapy.Spider):
     name = "berlinpolizei"
     allowed_domains = ["www.berlin.de"]
     start_urls = ["https://www.berlin.de/polizei/polizeimeldungen/?page_at_1_6=1#headline_1_6"]
-    
-    
 
     def parse(self, response):
         
         cases = response.css('#layout-grid__area--maincontent > section.modul-autoteaser > ul > li')
 
         for case in cases:
-            metadata = dict()
-            metadata['date'] = case.css('div.cell.nowrap.date::text').get().replace(' Uhr', '')
-            metadata['url'] = case.css('div.cell.text > a::attr(href)').get()
-            metadata['title'] = case.css('div.cell.text > a::text').get()
+            case_item = BerlinPoliceReportLoader(item=PoliceReportCase(), selector=case)
+            case_item.add_css('created_at', 'div.cell.nowrap.date::text')
+            case_item.add_css('url', 'div.cell.text > a::attr(href)')
+            case_item.add_css('title', 'div.cell.text > a::text')
 
-            yield metadata
+            yield case_item.load_item()
         
         next_page = response.css('#layout-grid__area--maincontent > section.modul-autoteaser > nav > ul > li.pager-item-next > a::attr(href)').get()
         
