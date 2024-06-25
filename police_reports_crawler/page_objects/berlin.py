@@ -1,6 +1,9 @@
 from police_reports_crawler.page_objects.base_page_objects import CasesPage
 
 
+SELECTOR_FOR_ALL = '#layout-grid__area--maincontent > section.modul-autoteaser > ul > li'
+SELECTOR_FOR_NEXT_PAGE = '#layout-grid__area--maincontent > section.modul-autoteaser > nav > ul > li.pager-item-next > a::attr(href)'
+
 class PageItemSelector(CasesPage):
     """
     https://www.berlin.de/polizei/polizeimeldungen/
