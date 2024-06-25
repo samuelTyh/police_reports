@@ -1,7 +1,7 @@
 from police_reports_crawler.page_objects.base_page_objects import CasesPage
 
 
-class BerlinCasesPageProcesser(CasesPage):
+class PageItemSelector(CasesPage):
     """
     https://www.berlin.de/polizei/polizeimeldungen/
     """

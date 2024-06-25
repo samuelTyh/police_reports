@@ -1,1 +1,1 @@
-from .berlin import BerlinCasesPageProcesser
+from .berlin import PageItemSelector
