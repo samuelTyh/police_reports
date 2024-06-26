@@ -1,8 +1,13 @@
-from urllib.parse import urlparse, urlunparse
+from urllib.parse import urlparse, urlunparse, urlencode
+from dotenv import load_dotenv
+import os
 
 from peewee import DatabaseProxy
 from playhouse.db_url import connect
 from playhouse.postgres_ext import PostgresqlExtDatabase
+
+
+load_dotenv()
 
 
 class SingletonMeta(type):
@@ -28,3 +33,10 @@ class SingletonMeta(type):
 class CustomDatabaseProxy(DatabaseProxy, metaclass=SingletonMeta):
     def __init__(self, db_uri=None):
         super().__init__()
+
+
+def get_proxy_url(url):
+    api_key = os.getenv("SCRAPEOPS_API_KEY")
+    payload = {'api_key': api_key, 'url': url}
+    proxy_url = 'https://proxy.scrapeops.io/v1/?' + urlencode(payload)
+    return proxy_url
