@@ -7,16 +7,15 @@ class CasesPage:
         self.itemloader = itemloader
 
     def to_item(self):
+        return self.itemloader.load_item()
+    
+    def get_all(self):
         self.get_filed_timestamp()
         self.get_url()
         self.get_title()
         self.get_location()
-        self.get_case_number()
         self.get_text_content()
-        self.get_additional_text_content()
         self.get_metadata()
-
-        return self.itemloader.load_item()
         
     def get_filed_timestamp(self):
         return
@@ -30,13 +29,7 @@ class CasesPage:
     def get_location(self):
         return
     
-    def get_case_number(self):
-        return
-    
     def get_text_content(self):
-        return
-    
-    def get_additional_text_content(self):
         return
     
     def get_metadata(self):

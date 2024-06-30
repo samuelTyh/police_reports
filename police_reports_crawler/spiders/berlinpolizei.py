@@ -1,7 +1,8 @@
 import scrapy
+import logging
 from police_reports_crawler.items import PoliceReportCase
 from police_reports_crawler.itemloaders.berlin import ItemTransformer
-from police_reports_crawler.page_objects.berlin import PageItemSelector, SELECTOR_FOR_ALL, SELECTOR_FOR_NEXT_PAGE
+from police_reports_crawler.page_objects.berlin import PageItemSelector, SELECTOR_FOR_ALL, SELECTOR_FOR_NEXT_PAGE, SELECTOR_FOR_TEXT_CONTENT
 from police_reports_crawler.utils.utils import get_proxy_url
 
 
@@ -36,11 +37,22 @@ class BerlinpolizeiSpider(scrapy.Spider):
         for case in cases:
             case_item = ItemTransformer(item=PoliceReportCase(), selector=case)
             processer = PageItemSelector(itemloader=case_item)
-
-            yield processer.to_item()
-        
+            processer.get_all()
+            url = processer.retrieve_url()
+            main_item = processer.to_item()
+            yield scrapy.Request(url=url, callback=self.parse_case_details, meta={'main': main_item})
+            
         next_page = response.css(SELECTOR_FOR_NEXT_PAGE).get()
         
         if next_page is not None:
            next_page_url = 'https://www.berlin.de' + next_page
            yield response.follow(next_page_url, callback=self.parse)
+
+    def parse_case_details(self, response):
+        all_text = response.css(SELECTOR_FOR_TEXT_CONTENT).getall()
+        inner_item = " ".join([text.strip() for text in all_text]).strip()
+
+        main_item = response.meta['main']
+
+        main_item['text_content'] = inner_item
+        yield main_item
