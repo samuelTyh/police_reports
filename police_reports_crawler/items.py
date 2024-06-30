@@ -14,8 +14,6 @@ class PoliceReportCase(scrapy.Item):
     url = scrapy.Field()
     title = scrapy.Field()
     location = scrapy.Field()
-    case_number = scrapy.Field()
     text_content = scrapy.Field()
-    additional_text_content = scrapy.Field()
 
     metadata = scrapy.Field()

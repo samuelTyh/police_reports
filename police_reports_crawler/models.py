@@ -13,19 +13,18 @@ class BaseModel(Model):
 
 class CasesItemModel(BaseModel):
 
+    id = AutoField()
     filed_at = DateTimeField(null=False)
     url = TextField(null=False)
     title = TextField(null=True)
     location = TextField(null=True, default='bezirksübergreifend')
-    case_number = TextField(null=True)
     text_content = TextField(null=True)
-    additional_text_content = TextField(null=True)
 
     metadata = JSONField(null=True)
 
     class Meta:
         db_table = "police_reports"
-        primary_key = CompositeKey('filed_at', 'url')
+        # primary_key = CompositeKey('id', 'url')
 
 
 def connect_to_db(db_uri):
